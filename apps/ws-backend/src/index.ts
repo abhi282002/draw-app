@@ -1,6 +1,8 @@
 import {WebSocketServer} from 'ws';
 import { SECRET } from '@repo/common';
 import jwt from 'jsonwebtoken';
+
+
 const wss = new WebSocketServer({
   port: 8080,
 });
@@ -9,6 +11,7 @@ const wss = new WebSocketServer({
 wss.on('connection',function connection(ws,request){
 
   const url = request.url;
+  console.log('url:',url);
   if(!url){
     ws.send('No URL provided');
     return;
@@ -23,10 +26,9 @@ wss.on('connection',function connection(ws,request){
   }
 
   const decoded = jwt.verify(token,SECRET);
-  
+
   if(!decoded || typeof decoded !== 'object' || !('_id' in decoded)){
-    ws.send('Invalid token');
-    return;
+    ws.close();
   }
 
   const userId = (decoded as {_id:string})._id;
