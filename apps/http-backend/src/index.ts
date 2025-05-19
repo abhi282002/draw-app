@@ -1,10 +1,11 @@
 import express,{ Request, Response } from 'express';
+import { SECRET } from '@repo/common';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import SignUpPayload from './Schema/SignUpSchema';
 import { prismaClient } from '@repo/db';
 import SignInPayload from './Schema/SignInSchema';
-import { SECRET } from './config';
+import { authMiddleware } from './middleware';
 
 
 const app = express();
@@ -78,7 +79,7 @@ app.post('/api/v1/login', async (req:Request, res:Response) => {
   }
 
   const token = jwt.sign({
-    id:user?.id,
+    _id:user?.id,
     email:user?.email,
   },SECRET,{
     expiresIn:"1d"
@@ -93,7 +94,13 @@ app.post('/api/v1/login', async (req:Request, res:Response) => {
 })
 
 
-
+app.post(
+  '/api/v1/room',
+  authMiddleware,
+  async (req:Request,res:Response)=>{
+    const userId = req.userId;
+  }
+)
 
 
 app.listen(3001, () => {
