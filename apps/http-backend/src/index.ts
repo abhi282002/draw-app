@@ -1,15 +1,17 @@
-import express, { Request, Response } from 'express';
-import SignUpPayload from './Schema/SignUpSchema';
+import express,{ Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { prisma } from 'database';
+import SignUpPayload from './Schema/SignUpSchema';
+import { prismaClient } from '@repo/db';
 import SignInPayload from './Schema/SignInSchema';
 import { SECRET } from './config';
+
 
 const app = express();
 
 
 app.use(express.json());
+
 
 
 app.post('/api/v1/signup', async (req:Request, res:Response) => { 
@@ -21,7 +23,7 @@ app.post('/api/v1/signup', async (req:Request, res:Response) => {
         res.status(400).json({error:'All fields are required'})
     }
 
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await prismaClient.user.findUnique({
       where:{
         email
       }
@@ -33,7 +35,7 @@ app.post('/api/v1/signup', async (req:Request, res:Response) => {
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const user = await prisma.user.create({
+    const user = await prismaClient.user.create({
       data:{
         name,
         email,
@@ -59,7 +61,7 @@ app.post('/api/v1/login', async (req:Request, res:Response) => {
     res.status(400).json({error:'All fields are required'})
   }
 
-  const user = await prisma.user.findUnique({
+  const user = await prismaClient.user.findUnique({
     where:{
       email
     }
@@ -94,8 +96,8 @@ app.post('/api/v1/login', async (req:Request, res:Response) => {
 
 
 
-app.listen(3000, () => {
-  console.log('HTTP server is running on port 3000');
+app.listen(3001, () => {
+  console.log('HTTP server is running on port 3001');
 });
 
 
