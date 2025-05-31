@@ -6,7 +6,7 @@ import DataStoredInToken from "./interfaces/dataStoredInToken";
 
 export const  authMiddleware = (
   req: Request,res:Response,next:NextFunction) =>{
-  const token = req.headers['authorization']?.split('')[1] || req.cookies
+  const token = req.headers['authorization']?.split(' ')[1] || req.cookies
 
   if(!token){
     res.status(401).json({error:'Unauthorized'})

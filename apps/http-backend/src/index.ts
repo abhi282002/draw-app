@@ -6,6 +6,7 @@ import SignUpPayload from './Schema/SignUpSchema';
 import { prismaClient } from '@repo/db';
 import SignInPayload from './Schema/SignInSchema';
 import { authMiddleware } from './middleware';
+import RoomPayload from './Schema/RoomSchema';
 
 
 const app = express();
@@ -18,11 +19,12 @@ app.use(express.json());
 app.post('/api/v1/signup', async (req:Request, res:Response) => { 
 
     const {name,email,password} =  SignUpPayload.parse(req.body)
-  
 
     if(!name || !email || !password){
         res.status(400).json({error:'All fields are required'})
     }
+
+    
 
     const existingUser = await prismaClient.user.findUnique({
       where:{
@@ -91,6 +93,7 @@ app.post('/api/v1/login', async (req:Request, res:Response) => {
   })
 
 
+
 })
 
 
@@ -99,8 +102,71 @@ app.post(
   authMiddleware,
   async (req:Request,res:Response)=>{
     const userId = req.userId;
+
+    console.log(userId)
+
+    const {slug} = RoomPayload.parse(req.body)
+
+    if(!userId){
+      res.status(401).json({error:'Unauthorized'})
+    }
+
+    if(!slug){
+      res.status(400).json({error:'Slug is required'})
+    }
+
+    const existingRoom = await prismaClient.room.findUnique({
+      where:{
+        slug
+      }
+    })
+    
+    if(existingRoom){
+      res.status(400).json({error:'Room already exists'})
+    }
+
+
+    const room = await prismaClient.room.create({
+      data:{
+        adminId:userId!,
+        slug,
+      }
+    })
+
+    res.status(201).json({
+      message:'Room created successfully',
+      room,
+    })
+    
   }
 )
+
+
+app.get('/api/v1/chats/:roomId',async (req:Request,res:Response)=>{
+  const roomId = Number(req.params.roomId)
+  if(!roomId){
+    res.status(400).json({error:'Room ID is required'})
+  }
+
+  const messages = await prismaClient.chat.findMany({
+    where:{
+      roomId
+    },
+    orderBy:{
+      id:'desc'
+    },
+    take:50
+  })
+
+
+  res.status(200).json({
+    messages,
+  })
+
+
+
+
+})
 
 
 app.listen(3001, () => {
