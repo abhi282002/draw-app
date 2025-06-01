@@ -1,10 +1,12 @@
+"use server"
+import DrawingAppLanding from "./components/Landing";
 
 
 
-export default function Home() {
+export default async function Home() {
   return (
   <>
-  <div className="md:grid-cols-1"></div>
+   <DrawingAppLanding />
   </>
   );
 }

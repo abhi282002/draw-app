@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "config.js",
-  "exports":{
-    ".": "./src/config.ts"
+  "exports": {
+    ".": "./src/config.ts",
+    "./schema": "./src/schema.ts"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,5 +15,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "zod": "^3.24.4"
+  }
 }

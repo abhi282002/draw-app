@@ -10,9 +10,14 @@
   "private": true,
   "exports": {
     "./styles.css": "./dist/styles.css",
+    "./Button": "./src/Button.tsx",
+    "./Input": "./src/Input.tsx",
+    "./Card": "./src/Card.tsx",
+    "./Tabs": "./src/Tabs.tsx",
+    "./Badge": "./src/Badge.tsx",
+    "./Icons": "./src/Icons.tsx",
     "./Colors": "./src/Colors.tsx"
   },
-  
   "scripts": {
     "build": "tailwindcss -i ./src/styles.css -o ./dist/styles.css",
     "lint": "eslint src/",
@@ -22,7 +27,6 @@
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@repo/utils": "workspace:*",
     "@turbo/gen": "^2.5.0",
     "@types/node": "^22.15.3",
     "@types/react": "19.1.0",
@@ -31,14 +35,20 @@
     "typescript": "5.8.2"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-tabs": "^1.1.12",
+    "@repo/design-system": "workspace:*",
+    "@repo/utils": "workspace:*",
     "@tailwindcss/cli": "^4.1.8",
     "@tailwindcss/postcss": "^4.1.6",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.511.0",
     "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.6",
-
-    "@repo/design-system": "workspace:*",
-
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "tailwind-merge": "^3.2.0",
+    "tailwindcss": "^4.1.6",
+    "tw-animate-css": "^1.3.3"
   }
 }

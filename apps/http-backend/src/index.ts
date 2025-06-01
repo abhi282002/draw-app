@@ -2,9 +2,9 @@ import express,{ Request, Response } from 'express';
 import { SECRET } from '@repo/common';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import SignUpPayload from './Schema/SignUpSchema';
+import cors from 'cors';
+import { SignUpPayload,SignInPayload } from '@repo/common/schema';
 import { prismaClient } from '@repo/db';
-import SignInPayload from './Schema/SignInSchema';
 import { authMiddleware } from './middleware';
 import RoomPayload from './Schema/RoomSchema';
 
@@ -12,9 +12,14 @@ import RoomPayload from './Schema/RoomSchema';
 const app = express();
 
 
+
+app.use(cors({
+  origin: 'http://localhost:3000', 
+  credentials: true, 
+}));
+
 app.use(express.json());
-
-
+app.use(express.urlencoded({ extended: true }));
 
 app.post('/api/v1/signup', async (req:Request, res:Response) => { 
 
@@ -40,7 +45,7 @@ app.post('/api/v1/signup', async (req:Request, res:Response) => {
 
     const user = await prismaClient.user.create({
       data:{
-        name,
+        name:name!,
         email,
         password:hashedPassword,
       }
@@ -49,7 +54,6 @@ app.post('/api/v1/signup', async (req:Request, res:Response) => {
 
     res.status(201).json({
       message:'User created successfully',
-      user,
     })
 
 
