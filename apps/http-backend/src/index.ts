@@ -93,7 +93,12 @@ app.post('/api/v1/login', async (req:Request, res:Response) => {
 
 
   res.status(200).cookie('token',token).json({
-    message:'Login successful',
+   token,
+    user:{
+      id:user?.id,
+      name:user?.name,
+      email:user?.email,
+    }
   })
 
 

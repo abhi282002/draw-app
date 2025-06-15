@@ -10,11 +10,16 @@ import { Auth } from "./Auth"
 import { Footer } from "./Footer"
 import { Gallery } from "./Gallery"
 import { Features } from "./Features"
+import { useSession } from "next-auth/react"
 
 
 export default function DrawingAppLanding() {
   const [isAuthOpen, setIsAuthOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  const session = useSession();
+
+  console.log("Session in Landing Page:", session);
 
   useEffect(()=>{
     //hydration fix

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { NextAuthProvider } from "./providers/nextAuthProviders";
 import "@repo/design-system/styles.css";
 import "@repo/ui/styles.css"
 import "./globals.css";
@@ -15,10 +16,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <NextAuthProvider basePath="/api/auth" >
     <html lang="en">
       <body>
         {children}
       </body>
     </html>
+    </NextAuthProvider>
   );
 }

@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { Button } from "@repo/ui/Button";
 import { Menu, Palette, X } from "@repo/ui/Icons";
+import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/Avatar"
+import { useSession } from "next-auth/react";
 
 interface HeaderProps{
   setIsAuthOpen: (isOpen: boolean) => void;
@@ -12,6 +14,9 @@ interface HeaderProps{
 }
 
 export function Header({isMobileMenuOpen,setIsAuthOpen,setIsMobileMenuOpen}:HeaderProps) {
+
+  const {data} = useSession();
+
   return (
     <>
         <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b">
@@ -42,13 +47,21 @@ export function Header({isMobileMenuOpen,setIsAuthOpen,setIsMobileMenuOpen}:Head
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
-            <Button
+           {data?.user.name?<>
+           
+           <Avatar className="w-10 h-10 shadow-sm">
+              <AvatarImage src={data.user.image || "/default-avatar.png"} alt={data.user.name} />
+              <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 p-2">{data.user.name.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+
+           </>: <Button
               variant="ghost"
               onClick={() => setIsAuthOpen(true)}
               className="text-purple-600 hover:text-purple-700 cursor-pointer"
             >
               Sign In
             </Button>
+}
             <Button
               onClick={() => setIsAuthOpen(true)}
               className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
@@ -85,9 +98,17 @@ export function Header({isMobileMenuOpen,setIsAuthOpen,setIsMobileMenuOpen}:Head
                 About
               </Link>
               <div className="flex flex-col space-y-2 pt-4 border-t">
-                <Button variant="ghost" onClick={() => setIsAuthOpen(true)}>
-                  Sign In
-                </Button>
+               {data?.user.name?(
+
+  
+           <Avatar className="w-8 h-8 shadow-sm">
+              <AvatarImage src={data.user.image || "/default-avatar.png"} alt={data.user.name} />
+              <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500">{data.user.name.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+
+               ): <Button variant="ghost" onClick={() => setIsAuthOpen(true)}>
+                       Sign In
+                </Button>}
                 <Button onClick={() => setIsAuthOpen(true)} className="bg-gradient-to-r from-purple-500 to-pink-500">
                   Get Started
                 </Button>

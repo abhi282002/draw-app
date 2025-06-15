@@ -7,7 +7,8 @@ import { Input } from "@repo/ui/Input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@repo/ui/Card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui/Tabs"
 import { X } from '@repo/ui/Icons'
-import { signIn, signUp } from '../actions/auth';
+import { signUp } from '../actions/auth';
+import { signIn } from 'next-auth/react';
 
 
 export interface AuthProps {
@@ -41,13 +42,16 @@ export const Auth = ({isAuthOpen,setIsAuthOpen}:AuthProps) => {
   const signInAction = async ()=>{
 
     setIsPending(true);
-    const {message} = await signIn({email: formData.email, password: formData.password})
+    
+    const res = await signIn('credentials',{email: formData.email, password: formData.password,redirect: false})
 
-    if(message){
-      console.log("Sign-in successful:", message);
+    if(res && res.ok){
+      console.log("Sign-in successful:", res);
       setIsAuthOpen(false); // Close the auth modal on successful sign-in
     } else {
-      console.error("Sign-in failed");
+      if(res?.error){
+        console.error("Sign-in failed:", res.error);
+      }
     }
 
   }
